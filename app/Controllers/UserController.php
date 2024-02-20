@@ -32,7 +32,7 @@ class UserController extends ResourceController
         
         $userid=trim($this->request->getVar('userid'));
         $pass=trim($this->request->getVar('password'));
-        $hash_pwd = md5($userid.$pass);
+        $hash_pwd = md5("#".$userid.$pass."#");
 
         $data =array(
             'userid' => $this->request->getVar('userid'),
@@ -125,7 +125,7 @@ class UserController extends ResourceController
         $model = new UserModel();
         $pass=trim($this->request->getVar('password'));
         $userid = trim($this->request->getVar('userid'));
-        $hash_pwd = md5($userid.$pass);
+        $hash_pwd = md5("#".$userid.$pass."#");
 
         $data = [
             'name'  => $this->request->getVar('name'),
@@ -170,7 +170,7 @@ class UserController extends ResourceController
         $userid = trim($this->request->getVar('userid'));
         $pass=trim($this->request->getVar('password'));
         
-        $hash_pwd = md5($userid.$pass);
+        $hash_pwd = md5("#".$userid.$pass."#");
 
         $data = array(
 			'userid'		=> $userid,

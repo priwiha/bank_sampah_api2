@@ -35,7 +35,7 @@ class UserController extends ResourceController
         $hash_pwd = md5("#".$userid.$pass."#");
 
         $data =array(
-            'userid' => $this->request->getVar('userid'),
+            'userid' => $userid,//$this->request->getVar('userid'),
             'name'  => $this->request->getVar('name'),
             'phone' => $this->request->getVar('phone'),
             'email'  => $this->request->getVar('email'),
@@ -56,11 +56,11 @@ class UserController extends ResourceController
             $newUserData = $model->find($insertedId);
             if  ($this->request->getVar('role')==2)
             {
-                echo "member";
+                //echo "member";
                 //insert mtmember
                 $model_member = new MemberModel();
                 $data_member =array(
-                    'userid' => $this->request->getVar('userid'),
+                    'userid' => $userid,//$this->request->getVar('userid'),
                     'name'  => $this->request->getVar('name'),
                     'address'  => null,// $this->request->getVar('address'),
                     'notelp' => $this->request->getVar('phone'),

@@ -184,8 +184,8 @@ class UserController extends ResourceController
         ->where('status',"Y")
         ->countAllResults();
 
-        echo $countuser;
-        var_dump($data);
+        //echo $countuser;
+        //var_dump($data);
 
         if ($countuser>0)
         {
@@ -195,7 +195,10 @@ class UserController extends ResourceController
                         ->first();
 
             if ($data) {
-                return $this->respond($data);
+                //return $this->respond($data);
+                return $this->response->setJSON(['success' => true, 'message' => 'Data user berhasil disimpan', 
+                'data' => $data]);
+            
             }
         }
         else {

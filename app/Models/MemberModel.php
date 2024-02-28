@@ -8,7 +8,7 @@ class MemberModel extends Model
 {
     protected $table = 'mtmember';
     protected $primaryKey = 'userid';
-    protected $allowedFields = ['userid', 'name','address','notelp','mail','totalamt',
+    protected $allowedFields = ['userid','membercode', 'name','address','notelp','mail','totalamt',
                                 'aktif','inuserid','chuserid','indate','chdate'];
 
 

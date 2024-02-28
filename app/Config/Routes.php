@@ -11,6 +11,10 @@ $routes->get('user/index','UserController::Index');
 $routes->post('user/create','UserController::Create');
 $routes->post('user/login','UserController::Login');
 
+$routes->get('member/index','MemberController::Index');
+$routes->post('member/getbycode','MemberController::Getbycode');
+$routes->post('member/updatemember','MemberController::Updatemember');
+
 $routes->get('uom/index','UomController::Index');
 $routes->post('uom/getuom','UomController::Getuom');
 

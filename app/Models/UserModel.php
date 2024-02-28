@@ -17,7 +17,7 @@ class UserModel extends Model
         'userid' => ['label' => 'Userid', 'rules' => 'required|min_length[0]|max_length[150]|is_unique[users.userid]'],
         'password' => ['label' => 'Password', 'rules' => 'required|min_length[0]'],
         //'confirm_password' => ['label' => 'Confirm Password', 'rules' => 'required|min_length[0]|matches[password]'],
-        'email' => ['label' => 'Email', 'rules' => 'required|valid_email|min_length[0]|max_length[150]|is_unique[users.email]'],
+        'email' => ['label' => 'Email', 'rules' => 'required|valid_email|min_length[0]|max_length[150]'/* |is_unique[users.email] */],
         //'avatar' => ['label' => 'Avatar', 'rules' => 'permit_empty|min_length[0]'],
         'phone' => ['label' => 'No telp', 'rules' => 'required|min_length[0]|max_length[50]'],
         'role'     =>  ['label' => 'Role', 'rules' => 'required|in_list[1,2]'],

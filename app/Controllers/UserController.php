@@ -32,18 +32,19 @@ class UserController extends ResourceController
         
         $userid=trim($this->request->getVar('userid'));
         $pass=trim($this->request->getVar('password'));
+        $membercode=$this->request->getVar('membercode');
         $hash_pwd = md5("#".$userid.$pass."#");
 
         $data =array(
-            'userid' => $userid,//$this->request->getVar('userid'),
-            'name'  => $this->request->getVar('name'),
-            'phone' => $this->request->getVar('phone'),
-            'email'  => $this->request->getVar('email'),
-            'password' => $hash_pwd,
-            'role'  => $this->request->getVar('role'),
-            'status' => "Y",//$this->request->getVar('status'),
-            'created_at'  => date("Y-m-d h:i:sa"),//$this->request->getVar('create_at'),
-            'updated_at'  => null,
+            'userid'     => $userid,//$this->request->getVar('userid'),
+            'name'       => $this->request->getVar('name'),
+            'phone'      => $this->request->getVar('phone'),
+            'email'      => $this->request->getVar('email'),
+            'password'   => $hash_pwd,
+            'role'       => $this->request->getVar('role'),
+            'status'     => "Y",//$this->request->getVar('status'),
+            'created_at' => date("Y-m-d h:i:sa"),//$this->request->getVar('create_at'),
+            'updated_at' => null,
 
         );
         //var_dump($data);
@@ -60,17 +61,18 @@ class UserController extends ResourceController
                 //insert mtmember
                 $model_member = new MemberModel();
                 $data_member =array(
-                    'userid' => $userid,//$this->request->getVar('userid'),
-                    'name'  => $this->request->getVar('name'),
-                    'address'  => null,// $this->request->getVar('address'),
-                    'notelp' => $this->request->getVar('phone'),
-                    'mail'  => $this->request->getVar('email'),
-                    'totalamt' => 0,
-                    'aktif'  => "Y",
-                    'inuserid' => "Register",//$this->request->getVar('status'),
-                    'chuserid' => null,
-                    'indate'  => date("Y-m-d h:i:sa"),//$this->request->getVar('create_at'),
-                    'chdate'  => null,
+                    'userid'     => $userid,//$this->request->getVar('userid'),
+                    'membercode' => $membercode,
+                    'name'       => $this->request->getVar('name'),
+                    'address'    => null,// $this->request->getVar('address'),
+                    'notelp'     => $this->request->getVar('phone'),
+                    'mail'       => $this->request->getVar('email'),
+                    'totalamt'   => 0,
+                    'aktif'      => "Y",
+                    'inuserid'   => "Register",//$this->request->getVar('status'),
+                    'chuserid'   => null,
+                    'indate'     => date("Y-m-d h:i:sa"),//$this->request->getVar('create_at'),
+                    'chdate'     => null,
                     );
                 
                     $insertedId_member = $model_member->insert($data_member);
@@ -79,7 +81,7 @@ class UserController extends ResourceController
                 
                 // Berikan respons JSON sukses dengan data yang baru diinsert
                 return $this->response->setJSON(['success' => true, 'message' => 'Data user berhasil disimpan', 
-                            'data' => $newUserData,
+                            'data' => $newUserData,'membercode' => $membercode,
                             /*'data member'=>newUserData_member */]);
      
             }
@@ -95,16 +97,6 @@ class UserController extends ResourceController
         }
     }
 
-        
-        //$model->insert($data);
-        /*$response = [
-            'status'   => 201,
-            'error'    => null,
-            'messages' => [
-                'success' => 'Data user berhasil ditambahkan.'
-            ]
-        ];*/
-        //return $this->respondCreated($response);
 
 
     

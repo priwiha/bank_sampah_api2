@@ -71,16 +71,23 @@ class TransaksiController extends ResourceController
         }
         else{
             
-            //get saldo akhir member
-            $totalamt_arr = $model_m->where('membercode', $membercode)
-                            ->findColumn('totalamt');
-
-            
             $totalamt = 0;
-            //jika ada update totalamt_arr
-            if (!empty($totalamt_arr)){
-                $totalamt = $totalamt_arr[0];
+            //get saldo akhir member
+            $result = $model_m->select('totalamt, userid')
+                   ->where('membercode', $membercode)
+                   ->get()
+                   ->getRow();
+
+            if ($result) {
+                $totalamt = $result->totalamt;
+                $userid_m = $result->userid;
+
+                // Gunakan nilai $value1 dan $value2 sesuai kebutuhan Anda
+            } else {
+                // Tidak ada hasil yang ditemukan
             }
+
+            //echo "cek ".$totalamt."-".$userid;
 
             $totalamt_akhir = $pricetot+$totalamt;   
 
@@ -92,23 +99,18 @@ class TransaksiController extends ResourceController
 
             ];
 
-            $model_m->update($membercode, $data_update);
+            $model_m->update($userid_m, $data_update);
 
-            /* try {
-                $model_m->update($membercode, $data_update);
-            } catch (\Exception $e) {
-                die($e->getMessage());
-            } */
 
-            $memberUpdated = $model_m->where('membercode', $membercode)->first();
-            echo  $totalamt_akhir;
-            var_dump($data_update,$memberUpdated);
+            $memberUpdated = $model_m->where('membercode', $userid_m)->first();
+            
         }
 
         //insert timbang
-        /* $model = new TransaksiTimbangModel();
+        $model = new TransaksiTimbangModel();
         $data =array(
             'membercode' => $membercode,
+            'userid'     => $userid_m,
             'idcategory' => $idcategory,
             'idprod'     => null,
             'qty'        => $qty,
@@ -136,8 +138,96 @@ class TransaksiController extends ResourceController
         else
         {
                 return  json_encode($model->validation->getErrors());
-        } */
+        }
     }
+
+    public function delete_timbang(){
+        $idgrb = trim($this->request->getVar('idgrb'));
+        $userid = trim($this->request->getVar('userid'));
+
+        
+
+        $model = new TransaksiTimbangModel();
+
+        $data_m = $model->where('idgrb', $idgrb)->first();
+        
+        if (!$data_m) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Transaksi tidak ditemukan',$idgrb]);
+        }
+        {
+            $results = $model->select('pricetot, userid')
+                            ->where('idgrb', $idgrb)
+                            ->get()
+                            ->getResult();
+            
+            $pricetot = 0;
+            $userid_m = "-";
+            
+            if (!empty($results)) {
+                //echo "ada";
+                // Pilih hasil pertama (baris pertama)
+                $result = $results[0];
+            
+                $pricetot = $result->pricetot;
+                $userid_m = $result->userid;
+            
+                // Gunakan nilai $pricetot dan $userid_m sesuai kebutuhan Anda
+            } else {
+                //echo "kosong";
+                // Tidak ada hasil yang ditemukan
+            }
+
+            //ambil saldo member
+            $model_m = new MemberModel();
+            $totalamt = 0;
+            //get saldo akhir member
+            $result = $model_m->select('totalamt, userid')
+                   ->where('userid', $userid_m)
+                   ->get()
+                   ->getRow();
+
+            if ($result) {
+                $totalamt = $result->totalamt;
+                // Gunakan nilai $value1 dan $value2 sesuai kebutuhan Anda
+            } else {
+                // Tidak ada hasil yang ditemukan
+            }
+
+            //echo $totalamt." ".$pricetot." ".$userid_m;
+
+            //kurangi saldo
+            $data_update = [
+                'totalamt'      =>  $totalamt-$pricetot,
+                'chuserid'      =>  $userid,
+                'chdate'        =>  date("Y-m-d h:i:sa"),
+
+            ];
+
+            $model_m->update($userid_m, $data_update);
+
+            // Contoh penghapusan data berdasarkan kondisi
+            $model->where('idgrb', $idgrb)
+            ->delete();
+
+            $memberUpdated = $model_m->where('userid', $userid_m)->first();
+                        
+            if ($memberUpdated)
+            {
+            
+                //$newTimbangData = $model->find($insertedId);
+                // Berikan respons JSON sukses dengan data yang baru diinsert
+                return $this->response->setJSON(['success' => true, 'message' => 'Data member berhasil diupdate', 
+                            'data' => $memberUpdated,]);
+            
+            }
+            else
+            {
+                    return  json_encode($model->validation->getErrors());
+            }
+        }
+
+        
+     }
 
 
     public function getuom()

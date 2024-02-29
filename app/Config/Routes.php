@@ -28,4 +28,5 @@ $routes->post('price/create','PriceController::Create');
 
 $routes->get('transaksi/getprice','TransaksiController::Getcategoryprice');
 $routes->post('transaksi/timbang','TransaksiController::Create_timbang');
+$routes->post('transaksi/timbang_del','TransaksiController::Delete_timbang');
 //$routes->resource('UserController');

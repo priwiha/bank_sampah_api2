@@ -58,7 +58,7 @@ class MemberController extends ResourceController
 
     public function updatemember()
     {
-        //updarte member
+        //update member
         $userid = $this->request->getVar('userid');
         $model = new MemberModel();
         $data = [

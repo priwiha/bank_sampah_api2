@@ -25,4 +25,7 @@ $routes->post('category/categorychange','CategoryController::Categorychange');
 
 $routes->get('price/index','PriceController::Index');
 $routes->post('price/create','PriceController::Create');
+
+$routes->get('transaksi/getprice','TransaksiController::Getcategoryprice');
+$routes->post('transaksi/timbang','TransaksiController::Create_timbang');
 //$routes->resource('UserController');

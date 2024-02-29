@@ -25,11 +25,13 @@ class PriceController extends ResourceController
         $db = \Config\Database::connect();
         $builder = $db->table('mtprice');
         $builder->select('mtprice.idprice,DATE_FORMAT(mtprice.begdate, "%d/%m/%Y") as begdate,mtprice.idcategory, mtcategory.namecategory, 
-                        mtprice.price,mtprice.status, 
-                        mtuom.iduom, mtuom.uomname');
+                            mtprice.price,mtprice.status, 
+                            mtuom.iduom, mtuom.uomname');
         $builder->join('mtcategory', 'mtcategory.idcategory = mtprice.idcategory');
         $builder->join('mtuom', 'mtuom.iduom = mtcategory.iduom');
-        $result = $builder->get(); 
+        $builder->orderBy('mtprice.idprice', 'DESC');
+        //$builder->orderBy('mtprice.begdate', 'DESC');
+        $result = $builder->get();
 
         if ($result->getResult()) {
             return $this->response->setJSON([
@@ -62,11 +64,13 @@ class PriceController extends ResourceController
         ////cari pricelist tanggal yang sama
         $model = new PriceModel();
         $price_arr = $model->where('idcategory', $idcategory)
-                    ->where('begdate', date("Y-m-d"))
+                    ->where('DATE_FORMAT(begdate, "%d-%m-%Y")', date("d-m-Y"))
                     ->where('iduom', $iduom)
                     //->countAll()
-                    ->findColumn('idprice') ;
-        
+                    ->findColumn('idprice');
+
+
+        //jika ada update harga
         if (!empty($price_arr)) {
             $idprice = $price_arr[0];
         
@@ -85,6 +89,34 @@ class PriceController extends ResourceController
                             ]);
         }
         else{
+            //cari pricelist atas kategori lainnya
+            $model1 = new PriceModel();
+            $price_arr1 = $model1->where('idcategory', $idcategory)
+                        ->where('status', "Y")
+                        ->where('iduom', $iduom)
+                        //->countAll()
+                        ->findColumn('idprice') ;
+
+            //nonaktifkan pricelist lama            
+            if (!empty($price_arr1)) {
+                $idprice1 = $price_arr1[0];
+            
+                $data = [
+                    'status'      => "T",
+                    'chuserid'    => $this->request->getVar('inuserid'),
+                    'chdate'      => date("Y-m-d h:i:sa")
+                ];
+                
+                $model->update($idprice1, $data);
+    
+                $newPriceData = $model->find($idprice1);
+    
+                /* return $this->response->setJSON(['success' => true, 'message' => 'Data pricelist berhasil dinonaktifkan', 
+                                'data' => $newPriceData,
+                                ]); */
+            }
+            //else{
+            //insert pricelist baru
             $data =array(
                 'idcategory' => $idcategory,
                 'idprod'  => null,
@@ -92,7 +124,7 @@ class PriceController extends ResourceController
                 'iduom'  => $iduom,
                 'begdate' => date("Y-m-d"),
                 'enddate'  => null,
-                'status'  => null,
+                'status'  => "Y",
                 'inuserid'  => $this->request->getVar('inuserid'),
                 'chuserid'  => null,
                 'indate'  => date("Y-m-d h:i:sa"),
@@ -111,12 +143,14 @@ class PriceController extends ResourceController
                 return $this->response->setJSON(['success' => true, 'message' => 'Data pricelist berhasil disimpan', 
                             'data' => $newPriceData,
                             ]);
-         
+            
             }
             else
             {
                     return  json_encode($model->validation->getErrors());
             }
+            //}
+            
         }
         
         

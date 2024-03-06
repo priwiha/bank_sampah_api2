@@ -188,13 +188,14 @@ class UserController extends ResourceController
 
             if ($data) {
                 //return $this->respond($data);
-                return $this->response->setJSON(['success' => true, 'message' => 'Data user berhasil disimpan', 
+                return $this->response->setJSON(['success' => true, 'message' => 'Berhasil Login!', 
                 'data' => $data]);
             
             }
         }
         else {
-            return $this->failNotFound('Data tidak ditemukan.');
+            //return $this->failNotFound('Data tidak ditemukan.');
+            return $this->response->setJSON(['success' => false, 'message' => 'Data tidak ditemukan!']);
         }
     }
 }

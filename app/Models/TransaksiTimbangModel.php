@@ -8,7 +8,7 @@ class TransaksiTimbangModel extends Model
 {
     protected $table = 'trgrbres';
     protected $primaryKey = 'idgrb';
-    protected $allowedFields = ['membercode','userid','idcategory','idprod',
+    protected $allowedFields = ['date','membercode','userid','idcategory','idprod',
                                 'qty','iduom','price','pricetot','inuserid','chuserid','indate','chdate'];
 
 

@@ -1,8 +1,0 @@
-CRITICAL - 2024-02-29 13:28:47 --> ErrorException: Undefined property: stdClass::$totalamt
-in APPPATH\Controllers\TransaksiController.php on line 191.
- 1 APPPATH\Controllers\TransaksiController.php(191): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$totalamt', 'C:\\xampp\\htdocs\\ci4\\app\\Controllers\\TransaksiController.php', 191)
- 2 SYSTEMPATH\CodeIgniter.php(941): App\Controllers\TransaksiController->delete_timbang()
- 3 SYSTEMPATH\CodeIgniter.php(502): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TransaksiController))
- 4 SYSTEMPATH\CodeIgniter.php(361): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 FCPATH\index.php(79): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\xampp\\htdocs\\ci4\\public\\index.php')

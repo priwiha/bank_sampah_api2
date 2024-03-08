@@ -67,7 +67,8 @@ class CategoryController extends ResourceController
         }
         else
         {
-                return  json_encode($model->validation->getErrors());
+                 return $this->response->setJSON(['success' => true, 'message' => $model->validation->getErrors()]);
+                //return  json_encode($model->validation->getErrors());
         }
         
     }
@@ -92,7 +93,9 @@ class CategoryController extends ResourceController
             return $this->response->setJSON(['success' => true, 'message' => 'Data Satuan berhasil diambil', 
                 'data' => $data]);
         } else {
-            return $this->failNotFound('Data tidak ditemukan.');
+            //return $this->failNotFound('Data tidak ditemukan.');
+            return $this->response->setJSON(['success' => true, 'message' => 'Data tidak ditemukan.']);
+                
         }
     }
 
@@ -114,7 +117,8 @@ class CategoryController extends ResourceController
             return $this->response->setJSON(['success' => true, 'message' => 'Data Satuan berhasil diambil', 
                 'data' => $data]);
         } else {
-            return $this->failNotFound('Data tidak ditemukan.');
+            return $this->response->setJSON(['success' => true, 'message' => 'Data tidak ditemukan.']);
+            //return $this->failNotFound('Data tidak ditemukan.');
         }
 
 

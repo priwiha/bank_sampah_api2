@@ -93,7 +93,9 @@ class UserController extends ResourceController
         }
         else
         {
-                return  json_encode($model->validation->getErrors());
+            return $this->response->setJSON(['success' => true, 'message' => $model->validation->getErrors()]);
+                
+            //return  json_encode($model->validation->getErrors());
         }
     }
 

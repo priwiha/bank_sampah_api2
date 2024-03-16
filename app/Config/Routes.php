@@ -29,4 +29,10 @@ $routes->post('price/create','PriceController::Create');
 $routes->get('transaksi/getprice','TransaksiController::Getcategoryprice');
 $routes->post('transaksi/timbang','TransaksiController::Create_timbang');
 $routes->post('transaksi/timbang_del','TransaksiController::Delete_timbang');
+$routes->post('transaksi/timbang_list','TransaksiController::Get_timbang_bymcode');
+
+$routes->post('transaksi/redeem_adm','TransaksiController::Create_redeem_adm');
+$routes->post('transaksi/redeem_del','TransaksiController::Delete_redeem');
+$routes->post('transaksi/redeem_list','TransaksiController::get_redeem_bymcode');
+
 //$routes->resource('UserController');

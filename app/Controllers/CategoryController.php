@@ -25,6 +25,7 @@ class CategoryController extends ResourceController
         $builder = $db->table('mtcategory');
         $builder->select('mtcategory.idcategory,mtcategory.namecategory,mtuom.iduom,mtuom.uomname');
         $builder->join('mtuom', 'mtuom.iduom = mtcategory.iduom');
+        $builder->orderBy('idcategory', 'DESC');
         $query= $builder->get(); 
         return $this->response->setJSON(['success' => true, 'message' => 'Data Category berhasil diambil', 
                 'data' => $query->getResult()]);

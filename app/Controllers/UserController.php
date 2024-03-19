@@ -113,12 +113,61 @@ class UserController extends ResourceController
             return $this->failNotFound('Data tidak ditemukan.');
         }
     }
+
+    public function chpass()
+    {
+        $model = new UserModel();
+        $pass_old=trim($this->request->getVar('pass_old'));
+        $pass_new=trim($this->request->getVar('pass_new'));
+        $user = trim($this->request->getVar('userid'));
+        
+        $hash_pwd_old = md5("#".$user.$pass_old."#");
+        $hash_pwd = md5("#".$user.$pass_new."#");
+
+        //cek user pakai pass
+        $data_cek = $model->where('userid', $user)->where('password', $hash_pwd_old)->first();
+
+        if (!$data_cek) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Password lama tidak sesuai', 
+            'cek_param' => $user.'- pass old:'.$pass_old.'- pass new:'.$pass_new]);
+        } else 
+        {
+            $getuser = $model->select('id, userid')
+                ->where('userid', $user)
+                ->get()
+                ->getRow();
+
+            if ($getuser) {
+                $id = $getuser->id;
+
+                // Gunakan nilai $value1 dan $value2 sesuai kebutuhan Anda
+            } else {
+                // Tidak ada hasil yang ditemukan
+            }
+
+
+            $data = [
+                //'name'  => $this->request->getVar('name'),
+                //'phone' => $this->request->getVar('phone'),
+                //'email'  => $this->request->getVar('email'),
+                'password' => $hash_pwd,
+                'update_at' => date("Y-m-d h:i:sa")
+            ];
+            $model->update($id, $data);
+            //$model->where('userid', $user)->update($data);
+            return $this->response->setJSON([
+                'success' => true, 'message' => 'Data user berhasil diubah.'
+            ]);
+        
+        }
+    }
+
     // update
     public function update($userid = null)
     {
         $model = new UserModel();
         $pass=trim($this->request->getVar('password'));
-        $userid = trim($this->request->getVar('userid'));
+        $user = trim($this->request->getVar('userid'));
         $hash_pwd = md5("#".$userid.$pass."#");
 
         $data = [
@@ -128,7 +177,7 @@ class UserController extends ResourceController
             'password' => $hash_pwd,
             'update_at' => $this->request->getVar('update_at'),
         ];
-        $model->update($userid, $data);
+        $model->update($user, $data);
         $response = [
             'status'   => 200,
             'error'    => null,
@@ -183,17 +232,53 @@ class UserController extends ResourceController
 
         if ($countuser>0)
         {
-            $data = $model->where('userid',$data['userid'])
+            $model_member = new MemberModel();
+            $results = $model->select('role')
+                ->where('userid', $userid)
+                ->get()
+                ->getResult();
+
+            $role = null;
+
+            if (!empty($results)) {
+                $result = $results[0];
+
+                $role = $result->role;
+
+                if ($role=='2')
+                {
+                    $db = \Config\Database::connect();
+                    $builder = $db->table('users');
+                    $builder->select('users.id,users.userid,users.name,users.phone,
+                                    users.email,users.email_verified_at,users.password,
+                                    users.remember_token,users.role,users.status,mtmember.membercode');
+                    $builder->join('mtmember', 'mtmember.userid = users.userid');
+                    $builder->where('users.userid',$userid);
+                    $result = $builder->get();
+                    $data   = $result->getResult();
+                }
+                else{
+                    $data = $model->where('userid',$data['userid'])
+                    ->where('password',$data['password'])
+                    ->where('status',"Y")
+                    ->first();
+                }
+                if ($data) {
+                    //return $this->respond($data);
+                    return $this->response->setJSON(['success' => true, 'message' => 'Berhasil Login!', 
+                    'data' => $data]);
+                
+                }
+            } else {
+            }
+
+
+            /*$data = $model->where('userid',$data['userid'])
                         ->where('password',$data['password'])
                         ->where('status',"Y")
-                        ->first();
+                        ->first(); */
 
-            if ($data) {
-                //return $this->respond($data);
-                return $this->response->setJSON(['success' => true, 'message' => 'Berhasil Login!', 
-                'data' => $data]);
             
-            }
         }
         else {
             //return $this->failNotFound('Data tidak ditemukan.');

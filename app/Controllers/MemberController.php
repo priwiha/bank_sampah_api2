@@ -52,7 +52,8 @@ class MemberController extends ResourceController
             return $this->response->setJSON(['success' => true, 'message' => 'Data Member berhasil diambil', 
                 'data' => $data]);
         } else {
-            return $this->failNotFound('Data tidak ditemukan.');
+            return $this->response->setJSON(['success' => true, 'message' => 'Data tidak ditemukan', 
+                'data' => $data]);
         }
     }
 
@@ -86,10 +87,11 @@ class MemberController extends ResourceController
 
         if ($data) {
             //return $this->respond($data);
-            return $this->response->setJSON(['success' => true, 'message' => 'Data Satuan berhasil diambil', 
+            return $this->response->setJSON(['success' => true, 'message' => 'Data member berhasil diubah', 
                 'data' => $data]);
         } else {
-            return $this->failNotFound('Data tidak ditemukan.');
+            return $this->response->setJSON(['success' => true, 'message' => 'Data member gagal diubah', 
+                'data' => $data]);
         }
     }
 

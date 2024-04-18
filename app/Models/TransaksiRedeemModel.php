@@ -8,7 +8,7 @@ class TransaksiRedeemModel extends Model
 {
     protected $table = 'trredeem';
     protected $primaryKey = 'idredeem';
-    protected $allowedFields = ['membercode','userid','redeemamt','redeemdate','approveddate','userapproved','inuserid',
+    protected $allowedFields = ['membercode','userid','redeemamt','redeemdate','approved','approveddate','userapproved','inuserid',
                                 'chuserid','indate','chdate'];
 	
 }

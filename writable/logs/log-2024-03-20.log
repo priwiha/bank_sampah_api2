@@ -1,0 +1,7 @@
+CRITICAL - 2024-03-20 09:51:49 --> ErrorException: Undefined property: stdClass::$redeemamt
+in APPPATH\Controllers\RedeemController.php on line 377.
+ 1 APPPATH\Controllers\RedeemController.php(377): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$redeemamt', 'C:\\xampp\\htdocs\\CI-4.4.5\\app\\Controllers\\RedeemController.php', 377)
+ 2 SYSTEMPATH\CodeIgniter.php(941): App\Controllers\RedeemController->approve_reedem_mem()
+ 3 SYSTEMPATH\CodeIgniter.php(502): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RedeemController))
+ 4 SYSTEMPATH\CodeIgniter.php(361): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 FCPATH\index.php(79): CodeIgniter\CodeIgniter->run()

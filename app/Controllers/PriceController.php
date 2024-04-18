@@ -22,6 +22,9 @@ class PriceController extends ResourceController
 
     public function index()
     {
+        
+        $date       = trim($this->request->getVar('date'));
+
         $db = \Config\Database::connect();
         $builder = $db->table('mtprice');
         $builder->select('mtprice.idprice,DATE_FORMAT(mtprice.begdate, "%d/%m/%Y") as begdate,mtprice.idcategory, mtcategory.namecategory, 
@@ -33,6 +36,7 @@ class PriceController extends ResourceController
         //$builder->orderBy('mtprice.begdate', 'DESC');
         $result = $builder->get();
 
+
         if ($result->getResult()) {
             return $this->response->setJSON([
                 'success' => true,
@@ -41,11 +45,46 @@ class PriceController extends ResourceController
             ]);
         } else {
             return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Tidak ada data Price ditemukan'
+                'success' => true,
+                'message' => 'Tidak ada data Price ditemukan',
+                'data'    => $result->getResult()
             ]);
         }
     }
+
+    public function get_price_bydate()
+    {
+        
+        $date       = trim($this->request->getVar('date'));
+
+        $db = \Config\Database::connect();
+        $builder = $db->table('mtprice');
+        $builder->select('mtprice.idprice,DATE_FORMAT(mtprice.begdate, "%d/%m/%Y") as begdate,mtprice.idcategory, mtcategory.namecategory, 
+                            mtprice.price,mtprice.status, 
+                            mtuom.iduom, mtuom.uomname');
+        $builder->join('mtcategory', 'mtcategory.idcategory = mtprice.idcategory');
+        $builder->join('mtuom', 'mtuom.iduom = mtcategory.iduom');
+        $builder->where("DATE_FORMAT(mtprice.begdate, '%d/%m/%Y')", $date);
+        $builder->orderBy('mtprice.idprice', 'DESC');
+        //$builder->orderBy('mtprice.begdate', 'DESC');
+        $result = $builder->get();
+
+
+        if ($result->getResult()) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Data Price berhasil diambil',
+                'data'    => $result->getResult()
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Tidak ada data Price ditemukan',
+                'data'    => $result->getResult()
+            ]);
+        }
+    }
+
 
 
     // create

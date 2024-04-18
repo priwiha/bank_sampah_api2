@@ -68,7 +68,7 @@ class UserController extends ResourceController
                     'notelp'     => $this->request->getVar('phone'),
                     'mail'       => $this->request->getVar('email'),
                     'totalamt'   => 0,
-                    'aktif'      => "Y",
+                    'aktif'      => "T",
                     'inuserid'   => "Register",//$this->request->getVar('status'),
                     'chuserid'   => null,
                     'indate'     => date("Y-m-d h:i:sa"),//$this->request->getVar('create_at'),
@@ -166,15 +166,15 @@ class UserController extends ResourceController
     public function update($userid = null)
     {
         $model = new UserModel();
-        $pass=trim($this->request->getVar('password'));
+        //$pass=trim($this->request->getVar('password'));
         $user = trim($this->request->getVar('userid'));
-        $hash_pwd = md5("#".$userid.$pass."#");
+        //$hash_pwd = md5("#".$userid.$pass."#");
 
         $data = [
             'name'  => $this->request->getVar('name'),
             'phone' => $this->request->getVar('phone'),
             'email'  => $this->request->getVar('email'),
-            'password' => $hash_pwd,
+            //'password' => $hash_pwd,
             'update_at' => $this->request->getVar('update_at'),
         ];
         $model->update($user, $data);
@@ -187,6 +187,50 @@ class UserController extends ResourceController
         ];
         return $this->respond($response);
     }
+
+    // update
+    public function reset_pass()
+    {
+        $model = new UserModel();
+        $pass=trim($this->request->getVar('password'));
+        $user = trim($this->request->getVar('userid'));
+        $hash_pwd = md5("#".$user.$pass."#");
+
+
+        $modeluser = new UserModel();
+        //get id user
+        $result = $modeluser->select('id')
+        ->where('userid', $user)
+        ->get()
+        ->getRow();
+
+        $iduser="";
+        if ($result) {
+            $iduser = $result->id;
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'id Member tidak ditemukan',]);
+    
+        }
+
+        $data = [
+            //'name'  => $this->request->getVar('name'),
+            //'phone' => $this->request->getVar('phone'),
+            //'email'  => $this->request->getVar('email'),
+            'password' => $hash_pwd,
+            'update_at' => $this->request->getVar('update_at'),
+        ];
+
+        $model->update($iduser, $data);
+        $response = [
+            'status'   => 200,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Data user berhasil diubah.'
+            ]
+        ];
+        return $this->respond($response);
+    }
+
     // delete
     public function delete($userid = null)
     {
@@ -226,6 +270,8 @@ class UserController extends ResourceController
         ->where('password',$data['password'])
         ->where('status',"Y")
         ->countAllResults();
+
+        //echo $countuser;
 
         //echo $countuser;
         //var_dump($data);
